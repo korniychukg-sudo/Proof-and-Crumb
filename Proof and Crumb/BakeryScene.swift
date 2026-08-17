@@ -4,6 +4,7 @@ struct ShopWindowScene: View {
     let records: [BakeRecord]
     var phase: Double
     var daylight: Double
+    var catPresent: Bool = false
 
     var body: some View {
         Canvas { ctx, size in
@@ -46,6 +47,87 @@ struct ShopWindowScene: View {
                     let tw = CGFloat(4)
                     let sparkX = loafRect.maxX - 6 + CGFloat(sin(phase * 3 + Double(i))) * 1.5
                     ctx.fill(Path(ellipseIn: CGRect(x: sparkX, y: loafRect.minY + 2, width: tw, height: tw)), with: .color(BakeTheme.butter.opacity(0.5 + 0.5 * sin(phase * 3 + Double(i)))))
+                }
+            }
+            for (i, record) in records.prefix(12).enumerated() {
+                let age = Date().timeIntervalSince(record.date)
+                guard age < 7200 else { continue }
+                let shelfIdx = i / perShelf
+                let slot = i % perShelf
+                let sy = shelfYs[min(shelfIdx, shelfYs.count - 1)]
+                let cx = windowRect.minX + 12 + slotW * CGFloat(slot) + slotW / 2
+                for wisp in 0..<2 {
+                    let cycle = 2.6 + Double(wisp)
+                    let t = (phase / cycle + Double(wisp) * 0.5 + Double(i) * 0.23).truncatingRemainder(dividingBy: 1)
+                    let wy = sy - slotW * 0.55 - CGFloat(t) * slotW * 0.5
+                    let wx = cx + CGFloat(sin(phase * 1.6 + Double(wisp) * 2 + Double(i))) * slotW * 0.08
+                    let r = slotW * (0.05 + CGFloat(t) * 0.06)
+                    ctx.fill(Path(ellipseIn: CGRect(x: wx - r, y: wy - r, width: r * 2, height: r * 1.4)), with: .color(Color.white.opacity(0.30 * (1 - t))))
+                }
+            }
+            var moteRng = BakeSeededRandom(seed: 15)
+            for m in 0..<16 {
+                let cycle = 9.0 + Double(moteRng.next()) * 6
+                let t = (phase / cycle + Double(moteRng.next())).truncatingRemainder(dividingBy: 1)
+                let mx = windowRect.minX + moteRng.next() * windowRect.width + CGFloat(sin(phase * 0.5 + Double(m))) * 6
+                let my = windowRect.minY + CGFloat(t) * windowRect.height
+                let d = 1.2 + moteRng.next() * 2.2
+                ctx.fill(Path(ellipseIn: CGRect(x: mx, y: my, width: d, height: d)), with: .color(Color(red: 1.0, green: 0.95, blue: 0.82).opacity(0.22 + 0.2 * daylight)))
+            }
+            if catPresent {
+                let catX = windowRect.minX + windowRect.width * 0.80
+                let catY = windowRect.maxY - 7
+                let breathe = 1 + CGFloat(sin(phase * 1.1)) * 0.02
+                let bodyW = windowRect.width * 0.17
+                let bodyH = bodyW * 0.52 * breathe
+                let marmalade = Color(red: 0.85, green: 0.52, blue: 0.22)
+                let marmaladeDeep = Color(red: 0.66, green: 0.37, blue: 0.13)
+                ctx.fill(Path(ellipseIn: CGRect(x: catX - bodyW * 0.55, y: catY - bodyH * 0.24, width: bodyW * 1.1, height: bodyH * 0.3)), with: .color(Color.black.opacity(0.16)))
+                var body = Path()
+                body.addEllipse(in: CGRect(x: catX - bodyW / 2, y: catY - bodyH, width: bodyW, height: bodyH))
+                ctx.fill(body, with: .color(marmalade))
+                ctx.stroke(body, with: .color(BakeTheme.ink.opacity(0.5)), lineWidth: 1.2)
+                for st in 0..<3 {
+                    var stripe = Path()
+                    let sx = catX - bodyW * 0.24 + CGFloat(st) * bodyW * 0.18
+                    stripe.move(to: CGPoint(x: sx, y: catY - bodyH * 0.92))
+                    stripe.addQuadCurve(to: CGPoint(x: sx + bodyW * 0.08, y: catY - bodyH * 0.45), control: CGPoint(x: sx + bodyW * 0.1, y: catY - bodyH * 0.7))
+                    ctx.stroke(stripe, with: .color(marmaladeDeep.opacity(0.8)), lineWidth: 1.6)
+                }
+                let headR = bodyW * 0.26
+                let headC = CGPoint(x: catX - bodyW * 0.38, y: catY - bodyH * 0.62)
+                var head = Path()
+                head.addEllipse(in: CGRect(x: headC.x - headR, y: headC.y - headR, width: headR * 2, height: headR * 1.8))
+                ctx.fill(head, with: .color(marmalade))
+                ctx.stroke(head, with: .color(BakeTheme.ink.opacity(0.5)), lineWidth: 1.2)
+                for side in [-1.0, 1.0] {
+                    var ear = Path()
+                    let ex = headC.x + CGFloat(side) * headR * 0.6
+                    ear.move(to: CGPoint(x: ex - headR * 0.28, y: headC.y - headR * 0.6))
+                    ear.addLine(to: CGPoint(x: ex, y: headC.y - headR * 1.25))
+                    ear.addLine(to: CGPoint(x: ex + headR * 0.28, y: headC.y - headR * 0.6))
+                    ear.closeSubpath()
+                    ctx.fill(ear, with: .color(marmaladeDeep))
+                }
+                var eye = Path()
+                eye.move(to: CGPoint(x: headC.x - headR * 0.4, y: headC.y + headR * 0.05))
+                eye.addQuadCurve(to: CGPoint(x: headC.x - headR * 0.05, y: headC.y + headR * 0.05), control: CGPoint(x: headC.x - headR * 0.22, y: headC.y + headR * 0.22))
+                eye.move(to: CGPoint(x: headC.x + headR * 0.15, y: headC.y + headR * 0.05))
+                eye.addQuadCurve(to: CGPoint(x: headC.x + headR * 0.5, y: headC.y + headR * 0.05), control: CGPoint(x: headC.x + headR * 0.32, y: headC.y + headR * 0.22))
+                ctx.stroke(eye, with: .color(BakeTheme.ink.opacity(0.75)), lineWidth: 1.3)
+                let tailFlick = CGFloat(sin(phase * 0.7))
+                var tail = Path()
+                tail.move(to: CGPoint(x: catX + bodyW * 0.44, y: catY - bodyH * 0.3))
+                tail.addCurve(to: CGPoint(x: catX + bodyW * 0.72, y: catY - bodyH * (0.9 + tailFlick * 0.14)),
+                              control1: CGPoint(x: catX + bodyW * 0.72, y: catY - bodyH * 0.2),
+                              control2: CGPoint(x: catX + bodyW * 0.82, y: catY - bodyH * 0.6))
+                ctx.stroke(tail, with: .color(marmalade), style: StrokeStyle(lineWidth: bodyW * 0.09, lineCap: .round))
+                ctx.stroke(tail, with: .color(marmaladeDeep.opacity(0.5)), style: StrokeStyle(lineWidth: bodyW * 0.03, lineCap: .round))
+                if Int(phase * 0.4) % 5 == 0 {
+                    let zx = headC.x - headR * 1.3
+                    let zy = headC.y - headR * 1.2
+                    ctx.draw(Text("z").font(BakeTheme.serif(9)).foregroundColor(BakeTheme.inkFaint.opacity(0.8)), at: CGPoint(x: zx, y: zy))
+                    ctx.draw(Text("z").font(BakeTheme.serif(7)).foregroundColor(BakeTheme.inkFaint.opacity(0.6)), at: CGPoint(x: zx - 7, y: zy - 8))
                 }
             }
             if records.isEmpty {

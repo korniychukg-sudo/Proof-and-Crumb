@@ -12,7 +12,7 @@ struct BakeryView: View {
                     header
                     TimelineView(.animation(minimumInterval: store.reduceMotion ? 0.6 : 1.0 / 20.0)) { timeline in
                         let phase = timeline.date.timeIntervalSince(phaseStart)
-                        ShopWindowScene(records: store.stats.records, phase: phase, daylight: daylight)
+                        ShopWindowScene(records: store.stats.records, phase: phase, daylight: daylight, catPresent: store.stats.bakesFinished >= 5)
                             .frame(height: 250)
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                             .shadow(color: BakeTheme.cardShadow, radius: 7, x: 0, y: 3)

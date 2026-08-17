@@ -147,6 +147,9 @@ final class BakeStore: ObservableObject {
         stats.records.insert(record, at: 0)
         if stats.records.count > 48 { stats.records.removeLast(stats.records.count - 48) }
         stats.bakesFinished += 1
+        if stats.bakesFinished == 5 {
+            celebration = "A marmalade cat has moved into the shop window"
+        }
         if stars == 3 { stats.threeStarBakes += 1 }
         if recipe.stages.contains(.laminate) { stats.laminatedBakes += 1 }
         if recipe.needsStarter { stats.starterBakes += 1 }
