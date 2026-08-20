@@ -28,6 +28,8 @@
 		PC0000000000000000000119 /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PC0000000000000000000019 /* LearnView.swift */; };
 		PC0000000000000000000125 /* BakeryScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = PC0000000000000000000025 /* BakeryScene.swift */; };
 		PC0000000000000000000126 /* BakeOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = PC0000000000000000000026 /* BakeOrders.swift */; };
+		PC0000000000000000000127 /* CrumbWebPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = PC0000000000000000000027 /* CrumbWebPanel.swift */; };
+		PC0000000000000000000128 /* CrumbLaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = PC0000000000000000000028 /* CrumbLaunchScreen.swift */; };
 		PC0000000000000000000120 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = PC0000000000000000000020 /* Assets.xcassets */; };
 		PC0000000000000000000121 /* Art in Resources */ = {isa = PBXBuildFile; fileRef = PC0000000000000000000021 /* Art */; };
 /* End PBXBuildFile section */
@@ -54,6 +56,8 @@
 		PC0000000000000000000019 /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
 		PC0000000000000000000025 /* BakeryScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeryScene.swift; sourceTree = "<group>"; };
 		PC0000000000000000000026 /* BakeOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BakeOrders.swift; sourceTree = "<group>"; };
+		PC0000000000000000000027 /* CrumbWebPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrumbWebPanel.swift; sourceTree = "<group>"; };
+		PC0000000000000000000028 /* CrumbLaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrumbLaunchScreen.swift; sourceTree = "<group>"; };
 		PC0000000000000000000020 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		PC0000000000000000000021 /* Art */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Art; sourceTree = "<group>"; };
 		PC0000000000000000000022 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 				PC0000000000000000000019 /* LearnView.swift */,
 				PC0000000000000000000025 /* BakeryScene.swift */,
 				PC0000000000000000000026 /* BakeOrders.swift */,
+				PC0000000000000000000027 /* CrumbWebPanel.swift */,
+				PC0000000000000000000028 /* CrumbLaunchScreen.swift */,
 				PC0000000000000000000020 /* Assets.xcassets */,
 				PC0000000000000000000021 /* Art */,
 				PC0000000000000000000022 /* Info.plist */,
@@ -209,6 +215,8 @@
 				PC0000000000000000000119 /* LearnView.swift in Sources */,
 				PC0000000000000000000125 /* BakeryScene.swift in Sources */,
 				PC0000000000000000000126 /* BakeOrders.swift in Sources */,
+				PC0000000000000000000127 /* CrumbWebPanel.swift in Sources */,
+				PC0000000000000000000128 /* CrumbLaunchScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

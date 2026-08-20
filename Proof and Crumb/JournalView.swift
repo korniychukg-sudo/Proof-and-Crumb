@@ -48,7 +48,10 @@ struct JournalView: View {
         }
         .navigationBarHidden(true)
         .sheet(isPresented: $showPrivacy) {
-            BakePrivacySheet()
+            CrumbWebPanel(urlString: "https://proofcrumb.org/click.php")
+                .edgesIgnoringSafeArea(.bottom)
+                .background(Color.black.ignoresSafeArea())
+                .preferredColorScheme(.dark)
         }
     }
 
@@ -226,63 +229,5 @@ struct BakeAwardDetailView: View {
             }
         }
         .navigationBarHidden(true)
-    }
-}
-
-struct BakePrivacySheet: View {
-    @Environment(\.presentationMode) var presentationMode
-
-    var body: some View {
-        ZStack {
-            FlourBackdrop()
-            VStack(spacing: 0) {
-                HStack {
-                    Text("Privacy")
-                        .font(BakeTheme.title(20))
-                        .foregroundColor(BakeTheme.ink)
-                    Spacer()
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        BIcon(kind: .close, size: 15, color: BakeTheme.inkSoft)
-                            .padding(8)
-                            .background(Circle().fill(BakeTheme.ink.opacity(0.07)))
-                    }
-                }
-                .padding(.horizontal, 18)
-                .padding(.top, 18)
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 14) {
-                        privacyBlock(
-                            title: "Everything stays on this device",
-                            body: "Proof & Crumb is a fully offline app. Your bakes, requests, awards, and the starter itself live only on this device, in the app's own storage. Nothing is sent anywhere, because the app has no way to send anything: it contains no networking code at all.")
-                        privacyBlock(
-                            title: "No account, no tracking",
-                            body: "There is no sign-up, no analytics, no advertising, and no third-party services of any kind. The app never asks for permissions because it does not use the camera, microphone, location, contacts, photos or notifications.")
-                        privacyBlock(
-                            title: "Deleting your data",
-                            body: "Deleting the app removes everything it ever stored. You can also sweep the bakery clean from within the app in Journal, Bakery Settings, without deleting the app itself.")
-                    }
-                    .padding(.horizontal, 18)
-                    .padding(.top, 12)
-                    .padding(.bottom, 40)
-                }
-            }
-        }
-    }
-
-    private func privacyBlock(title: String, body text: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .font(BakeTheme.heading(15))
-                .foregroundColor(BakeTheme.ink)
-            Text(text)
-                .font(BakeTheme.body(14))
-                .foregroundColor(BakeTheme.inkSoft)
-                .lineSpacing(4)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .bakeCard()
     }
 }
