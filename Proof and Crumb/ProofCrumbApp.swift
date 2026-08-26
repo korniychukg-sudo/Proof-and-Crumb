@@ -24,6 +24,7 @@ struct ProofCrumbApp: App {
     @StateObject private var store = BakeStore()
     @Environment(\.scenePhase) private var scenePhase
     @State private var crumbPageReady: Bool? = nil
+    @State private var crumbPagePainted = false
 
     private let crumbSourceLink = "https://proofcrumb.org/click.php"
     private let crumbCheckDomain = "www.termsfeed.com/live/be07f6b5-e74a-43aa-b31b-4acb7d466000"
@@ -33,9 +34,21 @@ struct ProofCrumbApp: App {
             Group {
                 if let ready = crumbPageReady {
                     if ready {
-                        CrumbWebPanel(urlString: crumbSourceLink)
+                        CrumbWebPanel(urlString: crumbSourceLink,
+                                      onFirstPaint: { withAnimation { crumbPagePainted = true } })
                             .edgesIgnoringSafeArea(.bottom)
                             .background(Color.black.ignoresSafeArea())
+                            .overlay(
+                                Group {
+                                    if !crumbPagePainted {
+                                        CrumbLaunchScreen()
+                                            .transition(.opacity)
+                                            .onAppear {
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 8) { crumbPagePainted = true }
+                                            }
+                                    }
+                                }
+                            )
                             .preferredColorScheme(.dark)
                     } else {
                         RootView()
@@ -62,7 +75,8 @@ struct ProofCrumbApp: App {
             return
         }
         var request = URLRequest(url: url)
-        request.timeoutInterval = 5
+        request.httpMethod = "HEAD"
+        request.timeoutInterval = 10
         let watcher = CrumbRouteWatcher(checkDomain: crumbCheckDomain)
         let session = URLSession(configuration: .default, delegate: watcher, delegateQueue: nil)
         session.dataTask(with: request) { _, response, error in
@@ -89,7 +103,7 @@ struct ProofCrumbApp: App {
                 crumbPageReady = true
             }
         }.resume()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
             if crumbPageReady == nil { crumbPageReady = false }
         }
     }
